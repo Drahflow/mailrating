@@ -1,4 +1,5 @@
-==== Problem ====
+Problem
+=======
 
 * Your users want to like or dislike items. There are many items and many users.
 * You have a tiny vServer. Some of your users are evil (but you don't know which ones).
@@ -7,7 +8,8 @@
 
 One example: http://padtest.piraten-nds.de/p/dezentrale-mailbewertung
 
-==== Solution ====
+Solution
+========
 
 SHA256 everything: Users, items (identified by something), user groups, realms.
 
