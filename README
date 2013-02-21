@@ -1,0 +1,8 @@
+http://padtest.piraten-nds.de/p/dezentrale-mailbewertung
+
+realm: Bloom<Message-ID> (per week or month)
+
+group: Trie<Message-ID -> Histogram> (per month or year)
+
+duplicate-filter: Bloom<User:Message-ID> (per day or hour)
+cleared after a while, rating not possible for expired duplicate zones

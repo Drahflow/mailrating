@@ -1,0 +1,57 @@
+probleme:
+
+zu viele nervige mails
+wie kann man um zeit zu sparen mit anderen zusammen (einen personenkreis, den man sich selber aussucht) mails bewerten
+
+lösungsansatz:
+
+Service
+*Scoping für
+*Bewertungsgruppen (z.B. alle / Mitglieder / Frankfurter Kranz / …)
+*Message IDs (damit man Change Sets abfragen kann)
+*List-ID
+*Thread ID?
+
+API
+
+/get/?
+Parameter:
+    messageids: Ein oder mehrere durch Kommata getrennte SHA256 Hashes von Message-Ids (alphabetisch sortiert)
+      oder
+    realm: SHA256 Hash eines abzufragenden Gebiets, z.B. List Id oder Thread Id
+        (optional) revision: letzte bekannte Revision (Update nur für Bewertungen(!) ab Zeitpunkt X)
+    groups : Ein oder mehrere durch Kommate getrennte Bewertungsgruppen (evtl. mit ":<gewicht>" hinten dran), Antworthistogram ist über alle Gruppen summiert
+    (optional) key: Authentifizierungstoken
+
+Return:
+{
+    "message-id": { // SHA256 Hash der Message-Id
+        "rating": int[21] (?),// Anzahl der Bewertungen von -10 bis +10 (Histogram)
+    }
+}
+
+/put/?
+Parameter:
+    messageid: Ein SHA256 Hash der zu bewertenden Message-Id
+    rating: int // Bewertung von -10 bis +10
+    (optional) realm: SHA256 Hash des Gebiets, z.B. List Id oder Thread Id
+    (optional) groups: Ein oder mehrere durch Kommate getrennte Bewertungsgruppen
+    key: Authentifizierungstoken
+
+Return:
+Entsprechende HTTP Codes
+
+Authentifizierungstokens sind 1-n mit den Bewertungsgruppen verknüpft.
+
+Thunderbird-Addon
+*Ressourcen
+*Custom Column https://developer.mozilla.org/en-US/docs/Extensions/Thunderbird/Creating_a_Custom_Column
+*Sorting and Filtering (geht hoffentlich auch anders) https://developer.mozilla.org/en-US/docs/Sorting_and_filtering_a_custom_tree_view
+*Preferences https://developer.mozilla.org/en/docs/Adding_preferences_to_an_extension
+*Getting and setting headers https://developer.mozilla.org/en-US/docs/XPCOM_Interface_Reference/nsIMsgDBHdr
+
+
+Weblösung
+*Jeder bekommt eigene Mailadresse, eingeschränkt auf eigene Domain.
+*Roundcube-Webmail mit Plugin für Bewerungskram.
+
