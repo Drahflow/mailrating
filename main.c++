@@ -43,16 +43,14 @@ std::vector<std::string> groups;
 std::string key;
 std::string rating;
 
-std::string page;
-
 int handle_fail(struct MHD_Connection *connection, const char * /*url*/, const char * /*method*/) {
   std::cerr << "Error: " << optionError << std::endl;
-  page = "<html><body>" + optionError + "</body></html>";
+  std::string page = "<html><body>" + optionError + "</body></html>";
   struct MHD_Response *response;
   int ret;
 
   response = MHD_create_response_from_buffer (page.length(),
-      (void *) page.data(), MHD_RESPMEM_PERSISTENT);
+      (void *) page.data(), MHD_RESPMEM_MUST_COPY);
   ret = MHD_queue_response (connection, MHD_HTTP_INTERNAL_SERVER_ERROR, response);
   MHD_destroy_response (response);
 
@@ -251,13 +249,11 @@ int handle_get(struct MHD_Connection *connection, const char *url, const char *m
   }
   reply << "}";
 
-  page = reply.str();
-
   struct MHD_Response *response;
   int ret;
 
-  response = MHD_create_response_from_buffer (page.length(),
-      (void*) page.data(), MHD_RESPMEM_PERSISTENT);
+  response = MHD_create_response_from_buffer (reply.str().length(),
+      (void*) reply.str().data(), MHD_RESPMEM_MUST_COPY);
   ret = MHD_queue_response (connection, MHD_HTTP_OK, response);
   MHD_destroy_response (response);
 
