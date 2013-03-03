@@ -259,15 +259,19 @@ int handle_get(struct MHD_Connection *connection, const char *url, const char *m
 
   ostringstream reply;
 
+  bool any = false;
   reply << "{";
   for(auto &m: result) {
+    if(any) reply << ",";
+    any = true;
+
     reply << "\"" << m.first << "\":{\"rating\":[";
     for(int i = 0; i < 21; ++i) {
       reply << m.second.counts[i];
 
       if(i != 20) reply << ",";
     }
-    reply << "],},";
+    reply << "]}";
   }
   reply << "}";
 
@@ -276,6 +280,7 @@ int handle_get(struct MHD_Connection *connection, const char *url, const char *m
 
   response = MHD_create_response_from_buffer (reply.str().length(),
       (void*) reply.str().data(), MHD_RESPMEM_MUST_COPY);
+  MHD_add_response_header (response, "Content-Type", "application/json; charset=iso-8859-15");
   ret = MHD_queue_response (connection, MHD_HTTP_OK, response);
   MHD_destroy_response (response);
 
