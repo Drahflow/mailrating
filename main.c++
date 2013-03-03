@@ -26,8 +26,8 @@ static const uint64_t SHA_LEN = 64;                    // how many characters a 
 /* The structure we are actually interested in.
  *
  * Votes for a single message are aggregated as a histogram.
- * Ratings -10 to 10 (inclusive) are stored in the counts[0] to counts[21],
- * i.e. a neutral rating increases counts[11].
+ * Ratings -10 to 10 (inclusive) are stored in the counts[0] to counts[20],
+ * i.e. a neutral rating increases counts[10].
  */
 struct CountHistogram {
   uint16_t counts[21];
@@ -188,7 +188,7 @@ int handle_put(struct MHD_Connection *connection, const char *url, const char *m
     }
 
     for(auto g: groups) {
-      ++MmappedTrie<CountHistogram, SHA_LEN / 2, TRIE_GROUP_DEPTH>("groups/" + g)[compressedMsgId].counts[intRating + 11];
+      ++MmappedTrie<CountHistogram, SHA_LEN / 2, TRIE_GROUP_DEPTH>("groups/" + g)[compressedMsgId].counts[intRating + 10];
     }
   } catch(const std::runtime_error &err) {
     optionError = err.what();
