@@ -16,11 +16,25 @@
 #include <string>
 #include <stdexcept>
 
+/* A file-backed bloom set implementation (see https://en.wikipedia.org/wiki/Bloom_filter for the idea)
+ *
+ * The implementation is fixed-size, i.e. the bloom filter cannot be resized during operations.
+ * It works by mmap(2)ing the whole bit array as a file, thereby providing cheap persistence.
+ *
+ * Usage example:
+ *   MmappedBloomSet b(1000, "foo");       // create new bloom set, expecting max. 1000 elements, store in file called "foo"
+ *   b.insert("Ohai");                     // insert "Ohai" into set
+ *   if(!b.contains("Ohai")) { // never }  // test for set membership
+ *   if(b.insert("Ohai"))    { // always } // insert "Ohai" again, find out it was already there
+ */
 class MmappedBloomSet {
   private:
     static const uint64_t INITIAL_ALLOC = 65536;
 
   public:
+    // Create a new bloom set.
+    //   expectedElements: number of elements we expect this bloom set to hold maximally
+    //   file: what file to use for storage (created if non-existent)
     MmappedBloomSet(uint64_t expectedElements, const std::string &file) {
       if(expectedElements == 0) expectedElements = 2;
 
@@ -70,6 +84,8 @@ class MmappedBloomSet {
     bool insert(const char *str, const size_t n) { return setBits(str, n) >= keybits; }
     bool insert(const std::string &s) { return insert(s.c_str(), s.length()); }
 
+    // return estimated raw fill state in promille
+    // an optimally used bloom filter should return 500
     int estimateFill() {
       int fill = 0;
       unsigned int max = 256;

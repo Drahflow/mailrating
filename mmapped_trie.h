@@ -16,6 +16,20 @@
 
 #include <stdexcept>
 
+/* A file-backed trie implementation (see https://en.wikipedia.org/wiki/Trie for the idea)
+ *
+ * The implementation grows the underlying file as the trie grows.
+ * It works by mmap(2)ing the whole memory, thereby providing cheap persistence.
+ *
+ * Usage example:
+ *   MmappedTrie<int, 8, 2> t("foo");                     // create a new trie, backed by file "foo", mapping strings
+ *                                                        // of length 8 to ints, but only using the first 2 characters
+ *                                                        // to bulid tree paths
+ *   t["01234567"] = 4;                                   // store a 4 at "01234567"
+ *   for(auto i = t.keys_begin(); i != keys_end(); ++i) { // iterate all keys in alphabetical order
+ *     std::cout << *i << ": " << t[*i] << std::endl;
+ *   }
+ */
 template<class V, int keylen, int triedepth> class MmappedTrie {
   private:
     struct InnerNode {
