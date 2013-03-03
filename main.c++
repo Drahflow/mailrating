@@ -129,13 +129,8 @@ bool check_duplicate(const std::string &dup) {
 
 // handle put request, i.e. a new vote by a user
 int handle_put(struct MHD_Connection *connection, const char *url, const char *method) {
-  if(messageid == "" || rating == "" || key == "") {
-    optionError = "messageid, rating and key must be specified (but were not).";
-    return handle_fail(connection, url, method);
-  }
-
-  if(groups.empty()) {
-    optionError = "No groups specified.";
+  if(messageid == "" || rating == "" || key == "" || groups.empty()) {
+    optionError = "messageid, rating, key and groups must be specified (but were not).";
     return handle_fail(connection, url, method);
   }
 
