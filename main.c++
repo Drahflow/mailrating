@@ -134,6 +134,11 @@ int handle_put(struct MHD_Connection *connection, const char *url, const char *m
     return handle_fail(connection, url, method);
   }
 
+  if(groups.empty()) {
+    optionError = "No groups specified.";
+    return handle_fail(connection, url, method);
+  }
+
   for(auto g: groups) {
     if(check_sha(g)) continue;
 
