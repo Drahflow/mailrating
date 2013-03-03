@@ -358,6 +358,13 @@ int help() {
 
 int main (int argc, const char *argv[]) {
   if(argc < 2) return help();
+
+  for(auto d: { "duplicates", "groups", "keys", "realms" }) {
+    if(mkdir(d, 0777) == -1 && errno != EEXIST) {
+      throw std::runtime_error(std::string("Could not create ") + d + ": " + strerror(errno));
+    }
+  }
+
   if(argv[1] == std::string("server")) {
     // libmicrohttpd invocation, bind to port 8080
     // request processing proceeds as follows:
