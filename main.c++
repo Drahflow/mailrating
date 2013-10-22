@@ -330,7 +330,13 @@ void *parse_uri_options(void * /*cls*/, const char *u) {
   for (tokenizer::iterator tok_iter = params.begin(); tok_iter != params.end(); ++tok_iter) {
     tokenizer kv(*tok_iter, boost::char_separator<char>("="));
     const std::string k = *kv.begin();
-    const std::string v = *(++kv.begin());
+
+    auto vi = ++kv.begin();
+    if(vi == kv.end()) {
+      optionError = "Empty option value.";
+      return 0;
+    }
+    const std::string v = *vi;
 
     if(k == "messageids") {
       tokenizer ids(v, boost::char_separator<char>(","));
